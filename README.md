@@ -1,13 +1,55 @@
-This project uses machine learning and computer vision to detect license plates and recognize their numbers on an iPhone. It was created over a weekend as a first delve into this topic and Apple's CoreML and Vision frameworks. I had a blast learning more about this area, and am excited to continue exploring it more in the future!
+# License Plate Recognition (iOS)
 
-![demo](LPRTest2.gif)
+An iOS application for detecting and recognizing license plates in real-time using Apple's CoreML and Vision frameworks.
 
-The first hurdle to tackle was detection of license plates. I started from scratch by recording video with license plates, extracting frames, and annotating the images with bounding boxes to train my object detection model. I used CreateML to process these images and annotations and was pleasantly surprised when it performed well with a test image, drawing a bounding box around the detected license plate.
+## 📱 Features
 
-Next I had to figure out how to incorporate this model into an app. Apple has a sample CoreML app for detecting objects that was a great reference, combined with some previous AVFoundation projects I had done in the past at Lambda School. There was still much work to be done to get my app working in both landscape and portrait orientations and drawing bounding boxes correctly. Translating detected object rectangles to bounding boxes on the preview screen is trickier than it appears at first glance!
+- Real-time license plate detection using a custom-trained CoreML object detection model.
+- Optical Character Recognition (OCR) on captured license plates via Vision framework's `VNRecognizeTextRequest`.
+- Thread-safe model management using Dispatch Queues.
+- Supports both landscape and portrait orientations.
 
-Before working on reading the actual plate number, I had to architect my model and model controller which would allow me to keep track of license plates that are visible on screen. This way, I could first detect plates and their bounding boxes and then use that info to try to read the plate number and add that info to the plates as a second step. I also used a dispatch queue to provide thread safety in the model controller. In the future, it would be nice to add the ability to store license plate numbers that had been detected as well as cross-reference them against a whitelist and/or blacklist.
+![Demo GIF](path/to/demo.gif)
 
-Next I turned my attention to reading actual license plate numbers. I decided to add a photo output to my av capture session, allowing me to capture a full res (with my iPhone 7 plus, that's 4032 x 3024) frame instead of trying to use the 640x480 video buffer that I was using for detecting the plate's bounds. I would then pass in the area of the plate I wanted to detect from the photo, allowing the VNRecognizeTextRequest to only analyze the text within those bounds. I did the job of capturing the photo and recognizing the text using NSOperations.
+## 🛠 Technology Stack
 
-Overall I am super happy with how this project turned out, especially given the time constraints. While the detection and recognition could most definitely be improved, it functions great for a quick prototype and allowed me to learn so much about working with CoreML, Vision, and AVFoundation.
+- Swift
+- CoreML (for object detection)
+- Vision (for OCR)
+- AVFoundation (for real-time camera capture)
+- CreateML (for model training)
+- Xcode 13+ (recommended)
+
+## 📦 Project Structure
+
+- `LicensePlateRecognition/` – Main app source code.
+- `LicensePlateRecognitionTests/` – Unit tests.
+- `LicensePlateRecognition.xcodeproj` – Xcode project.
+- `LicensePlateRecognition.xcworkspace` – Xcode workspace (for CocoaPods).
+
+## 🔧 Installation
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/pranavgadham/LicensePlateRecognition.git
+   cd LicensePlateRecognition
+   ```
+
+2. Install dependencies (if using CocoaPods):
+   ```bash
+   pod install
+   ```
+
+3. Open the `.xcworkspace` file:
+   ```bash
+   open LicensePlateRecognition.xcworkspace
+   ```
+
+4. Build and run the project on a physical device (camera usage is required).
+
+## 📈 Future Improvements
+
+- Improve accuracy with a larger, more diverse training dataset.
+- Add local database storage for recognized plate numbers.
+- Implement whitelist/blacklist verification of detected plates.
+- Enhance UI/UX for easier plate tracking and management.
